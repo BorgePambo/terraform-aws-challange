@@ -62,6 +62,7 @@ module "vpc" {
 # this module is used to create an EKS cluster with managed node groups. 
 # It also tags all resources with the provided project tags. 
 #The EKS cluster is created in the VPC created by the previous module, using the private subnets for the worker nodes.
+/*
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 21.0"
@@ -94,3 +95,4 @@ module "eks" {
 
 }
 
+*/
