@@ -35,6 +35,8 @@ module "vpc" {
   public_subnets  = var.aws_vpc_public_subnets
 
   enable_nat_gateway = true
+  single_nat_gateway  = true   # 🔥 ESSENCIAL
+
   enable_vpn_gateway = true
 
   tags = merge(
@@ -53,8 +55,6 @@ module "vpc" {
     "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.aws_eks_name}" = "shared"
   }
-
-
 }
 
 
