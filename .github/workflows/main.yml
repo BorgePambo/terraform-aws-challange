@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
     paths:
       - 'src/**'
   workflow_dispatch:
@@ -23,3 +24,20 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
+
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ./src
+        run: terraform  init
+        
+      - name: Terraform Plan
+        working-directory: ./src
+        run: terraform plan
+        
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: ./src
+        run: terraform apply -auto-approve
