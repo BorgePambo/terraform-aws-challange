@@ -35,7 +35,7 @@ module "vpc" {
   public_subnets  = var.aws_vpc_public_subnets
 
   enable_nat_gateway = true
-  single_nat_gateway  = true   # 🔥 ESSENCIAL
+  single_nat_gateway = true # 🔥 ESSENCIAL
 
   enable_vpn_gateway = true
 
@@ -58,11 +58,6 @@ module "vpc" {
 }
 
 
-
-# this module is used to create an EKS cluster with managed node groups. 
-# It also tags all resources with the provided project tags. 
-#The EKS cluster is created in the VPC created by the previous module, using the private subnets for the worker nodes.
-/*
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 21.0"
@@ -70,21 +65,19 @@ module "eks" {
   name               = var.aws_eks_name
   kubernetes_version = var.aws_eks_version
 
-  # Optional
   endpoint_public_access = true
 
-  # Optional: Adds the current caller identity as an administrator via cluster access entry
   enable_cluster_creator_admin_permissions = true
 
-
   eks_managed_node_groups = {
-    "general-purpose" = {
-      desired_capacity = 2
-      max_capacity     = 3
-      min_capacity     = 1
-
+    general-purpose = {
       instance_types = var.aws_eks_managed_node_groups_instance_types
-      tags           = var.aws_project_tags
+
+      min_size     = 1
+      max_size     = 3
+      desired_size = 2
+
+      tags = var.aws_project_tags
     }
   }
 
@@ -92,7 +85,4 @@ module "eks" {
   subnet_ids = module.vpc.private_subnets
 
   tags = var.aws_project_tags
-
 }
-
-*/
