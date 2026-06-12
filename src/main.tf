@@ -49,10 +49,11 @@ module "vpc" {
     "kubernetes.io/cluster/${var.aws_eks_name}" = "shared"
   }
 
-  net_tags = {
+  private_subnet_tags = {
     "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.aws_eks_name}" = "shared"
   }
+
 
 }
 
