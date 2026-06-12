@@ -1,4 +1,4 @@
-# Automação Terraform
+# Automação Terraform CICD
 
 O objetivo é automatizar o processo de criação e manutenção do ambiente para execução dos projetos de Software da Mr. Fusion Solutions.
 
