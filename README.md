@@ -17,6 +17,13 @@ Para o desenvolvimento do projeto, foram levantadas as seguintes premissas:
 
 ---
 
+## 🧱 Estrutura da Solução
+
+A arquitetura do projeto está representada abaixo:
+
+![Arquitetura do Pipeline](./diagram/pipeline.drawio.png)
+
+
 ## 🧰 Tecnologias Utilizadas
 
 - AWS
