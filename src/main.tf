@@ -12,7 +12,7 @@ terraform {
     key    = "terraform/state.tfstate"
     region = "us-east-2"
   }
-  
+
 
 }
 
@@ -23,13 +23,10 @@ provider "aws" {
 
 
 
-
-
-
 # this module is used to create a VPC with public and private subnets, NAT gateway, and VPN gateway. It also tags all resources with the provided project tags.
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-  
+
   name = var.aws_vpc_name
   cidr = var.aws_vpc_cidr
 
@@ -40,13 +37,30 @@ module "vpc" {
   enable_nat_gateway = true
   enable_vpn_gateway = true
 
-  tags = var.aws_project_tags
+  tags = merge(
+    var.aws_project_tags,
+    {
+      "kubernetes.io/cluster/${var.aws_eks_name}" = "shared"
+    }
+  )
+
+  public_subnet_tags = {
+    "kubernetes.io/role/elb"                    = "1"
+    "kubernetes.io/cluster/${var.aws_eks_name}" = "shared"
+  }
+
+  net_tags = {
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/${var.aws_eks_name}" = "shared"
+  }
 
 }
 
 
-/*
-# this module is used to create an EKS cluster with managed node groups. It also tags all resources with the provided project tags. The EKS cluster is created in the VPC created by the previous module, using the private subnets for the worker nodes.
+
+# this module is used to create an EKS cluster with managed node groups. 
+# It also tags all resources with the provided project tags. 
+#The EKS cluster is created in the VPC created by the previous module, using the private subnets for the worker nodes.
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 21.0"
@@ -67,15 +81,15 @@ module "eks" {
       max_capacity     = 3
       min_capacity     = 1
 
-      instance_types   = var.aws_eks_managed_node_groups_instance_types
+      instance_types = var.aws_eks_managed_node_groups_instance_types
+      tags           = var.aws_project_tags
     }
   }
 
-  vpc_id     =  module.vpc.vpc_id
-  subnet_ids =  module.vpc.private_subnets
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
 
   tags = var.aws_project_tags
 
 }
 
-*/
